@@ -1,7 +1,7 @@
-// Controllers/ProfileController.cs
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 [Route("api/profile")]
@@ -9,13 +9,14 @@ using System.Security.Claims;
 [Authorize]  // Koi bhi logged-in user (Admin ya User) apna profile access kar sakta hai
 public class ProfileController : ControllerBase
 {
-    private readonly IMongoCollection<User> _users;
+    private readonly AppDbContext _db;
 
-    public ProfileController(MongoDBContext context)
+    public ProfileController(AppDbContext db)
     {
-        _users = context.Users;
+        _db = db;
     }
 
+    // JWT claims se current user ka Id nikalta hai (ab int mein convert karna hoga)
     private string GetCurrentUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
     // GET: /api/profile — apna profile dekho
@@ -23,7 +24,7 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> GetProfile()
     {
         var userId = GetCurrentUserId();
-        var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) return NotFound("Profile not found.");
 
         return Ok(new { user.Id, user.Username, user.Email_Address, user.Role });
@@ -34,14 +35,14 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> UpdateProfile(UpdateProfileDto dto)
     {
         var userId = GetCurrentUserId();
-        var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) return NotFound("Profile not found.");
 
-        var update = Builders<User>.Update
-            .Set(u => u.Username, dto.Username ?? user.Username)
-            .Set(u => u.Email_Address, dto.Email ?? user.Email_Address);
+        user.Username = dto.Username ?? user.Username;
+        user.Email_Address = dto.Email ?? user.Email_Address;
 
-        await _users.UpdateOneAsync(u => u.Id == userId, update);
+        _db.Users.Update(user);
+        await _db.SaveChangesAsync();
         return Ok(new { message = "Profile updated successfully." });
     }
 
@@ -50,7 +51,7 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> ChangePassword(ChangePasswordDto dto)
     {
         var userId = GetCurrentUserId();
-        var user = await _users.Find(u => u.Id == userId).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null) return NotFound("Profile not found.");
 
         // Pehle purana password verify karo
@@ -58,9 +59,10 @@ public class ProfileController : ControllerBase
             return BadRequest("Old password is incorrect.");
 
         var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-        var update = Builders<User>.Update.Set(u => u.PasswordHash, newHash);
+        user.PasswordHash = newHash;
 
-        await _users.UpdateOneAsync(u => u.Id == userId, update);
+        _db.Users.Update(user);
+        await _db.SaveChangesAsync();
         return Ok(new { message = "Password changed successfully." });
     }
 }

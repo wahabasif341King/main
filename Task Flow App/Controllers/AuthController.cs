@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 using Microsoft.AspNetCore.Mvc; // Is Library se ye functions Use hotey hain: 
 // ControllerBase
 // ApiController
@@ -10,9 +11,6 @@ using Microsoft.AspNetCore.Mvc; // Is Library se ye functions Use hotey hain:
 // IActionResult
 
 
-using MongoDB.Driver;
-
-
 [Route("api/auth")] // Ye atrribute batat hai ke kis URL pr ye chale ga.
 [ApiController]  // Ye sirf API banata hai. Ye json fromat mein response dega.
 public class AuthController : ControllerBase // AuthController ek Controller hai and ControllerBase inheritance means AuthController ControllerBase ki functionality le raha hai.
@@ -22,12 +20,12 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
 // Unauthorized()
 // NotFound()   , etc.
 {
-    private readonly IMongoCollection<User> _users; // Is mein MongoDB se User Collection _user mein store ho rai hai.
+    private readonly AppDbContext _db; // Is mein MongoDB se User Collection _user mein store ho rai hai.
     private readonly TokenService _tokenService; // Ye Login krne pr Jwt Token banaye ga
 
-    public AuthController(MongoDBContext context, TokenService tokenService)
+    public AuthController(AppDbContext db, TokenService tokenService)
     {
-        _users = context.Users; // User ka database store ho gya is mein.
+        _db = db;
         _tokenService = tokenService; // TokenService ko store kr liya
     }
 
@@ -35,7 +33,7 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDTO dto)
     {
-        var existing = await _users.Find(u => u.Username == dto.Username).FirstOrDefaultAsync();
+        var existing = await _db.Users.FirstOrDefaultAsync(u => u.Username == dto.Username);
         if (existing != null) return BadRequest("Username already taken.");
 
         var user = new User
@@ -46,7 +44,8 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
             Role = dto.Username == "admin" ? "Admin" : "User"
         };
 
-        await _users.InsertOneAsync(user);
+        _db.Users.Add(user);
+        await _db.SaveChangesAsync();
         return Ok(new { message = "Registered successfully!" });
     }
 
@@ -54,7 +53,7 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDTO dto)
     {
-        var user = await _users.Find(u => u.Email_Address == dto.Email_Adress).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email_Address == dto.Email_Adress);
         if (user == null) return Unauthorized("Invalid username or password.");
 
         bool isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
@@ -65,7 +64,7 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
     }
 
     [HttpPost("logout")]
-    // [Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize] // Ye attribute batata hai ke ye function sirf authorized user ke liye hai. Agr user authorized nai
     public IActionResult Logout()
     {
         // JWT stateless hota hai, server ke paas koi session store nahi hoti
@@ -76,7 +75,7 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
-        var user = await _users.Find(u => u.Email_Address == dto.Email).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Email_Address == dto.Email);
         if (user == null)
         {
             // Security practice: mat batao ke email exist nahi karta (email enumeration attack se bachne ke liye)
@@ -86,12 +85,10 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
         // Simple reset token generate karo (real app mein yeh email se bhejte hain)
         var resetToken = Guid.NewGuid().ToString();
 
-        // Token ko user document mein temporarily store karo (expiry ke sath)
-        var update = Builders<User>.Update
-            .Set(u => u.ResetToken, resetToken)
-            .Set(u => u.ResetTokenExpiry, DateTime.Now.AddMinutes(15));
+        user.ResetToken = resetToken;
+        user.ResetTokenExpiry = DateTime.Now.AddMinutes(15);
 
-        await _users.UpdateOneAsync(u => u.Id == user.Id, update);
+        await _db.SaveChangesAsync();
 
         // Real app mein: yahan email service se resetToken bhejo user ko
         // Abhi ke liye response mein hi wapas bhej rahe hain (testing ke liye)
@@ -101,17 +98,16 @@ public class AuthController : ControllerBase // AuthController ek Controller hai
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
-        var user = await _users.Find(u => u.ResetToken == dto.Token).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.ResetToken == dto.Token);
         if (user == null || user.ResetTokenExpiry == null || user.ResetTokenExpiry < DateTime.Now)
             return BadRequest("Invalid or expired reset token.");
 
-        var newHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
-        var update = Builders<User>.Update
-            .Set(u => u.PasswordHash, newHash)
-            .Set(u => u.ResetToken, (string?)null)
-            .Set(u => u.ResetTokenExpiry, (DateTime?)null);
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        user.ResetToken = null;
+        user.ResetTokenExpiry = null;
 
-        await _users.UpdateOneAsync(u => u.Id == user.Id, update);
+        await _db.SaveChangesAsync();
+
         return Ok(new { message = "Password reset successfully." });
     }
 }

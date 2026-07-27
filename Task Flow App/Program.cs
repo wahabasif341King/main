@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer; // YE Jwt Authentication ki properties le kr ata hai.
 // IS ke baghair ap "JwtBearerDefaults.AuthenticationScheme" use nai kr saktey.
 
+
+using Microsoft.EntityFrameworkCore; // Sql Database ke liye ye library hai. Is mein "DbContext" and "DbSet" hotey hain. Ye dono Database ke liye use hote hain.
+
 using Microsoft.IdentityModel.Tokens; // Ye Security wali library hai. Is mein "TokenValidationParameters" and "SymmetricSecurityKey" hain.
 
 using System.Text;
@@ -8,7 +11,10 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args); // Builder bana raha jis ne Project manage krna sara
 
 builder.Services.AddControllers(); // MVC Views nahi chahiye, sirf API Controllers
-builder.Services.AddSingleton<MongoDBContext>(); // "AddSingleton" matlab Application Start hotey hi ek Object bane ga. 1000 Requests bhi a jayein Object ek hi rahe ga.
+// MongoDB ki jagah — EF Core + MySQL
+builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    );
 builder.Services.AddScoped<TokenService>(); // "AddScoped" ka matlab har Request ke liye new Object.
 
 // JWT Authentication setup

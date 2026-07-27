@@ -22,7 +22,7 @@ public class TokenService
     {
         var Claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id!),
+            new Claim(ClaimTypes.NameIdentifier, user.Id!.ToString()), // int ko string mein convert kr diya gya hai.(Imp)
             new Claim(ClaimTypes.Surname, user.Username!),
             new Claim(ClaimTypes.Role, user.Role!)
         };

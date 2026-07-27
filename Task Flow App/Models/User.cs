@@ -1,11 +1,17 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class User
 {
-    [MongoDB.Bson.Serialization.Attributes.BsonId]
-    [MongoDB.Bson.Serialization.Attributes.BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
-    public string? Id { get; set; }
+    [Key]
+    public string? Id { get; set; } // // MySQL mein auto-increment int hota hai, MongoDB ke ObjectId string ki tarah nahi
 
+    [Required]
+    [StringLength(100)]
     public string? Username { get; set; }
 
+    [Required]
+    [EmailAddress]
     public string? Email_Address { get; set; }
 
     public string? PasswordHash { get; set; }

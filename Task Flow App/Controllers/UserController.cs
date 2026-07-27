@@ -1,28 +1,28 @@
-// Controllers/UserController.cs
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 
 [Route("api/users")]
 [ApiController]
 [Authorize(Roles = "Admin")]  // Sirf Admin is poore Controller ko access kar sakta hai
 public class UserController : ControllerBase
 {
-    private readonly IMongoCollection<User> _users;
+    private readonly AppDbContext _db;
 
-    public UserController(MongoDBContext context)
+    public UserController(AppDbContext db)
     {
-        _users = context.Users;
+        _db = db;
     }
 
     // GET: /api/users — sab users dekho
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var users = await _users.Find(_ => true).ToListAsync();
+        var users = await _db.Users.ToListAsync();
 
         // PasswordHash kabhi bhi response mein wapas mat bhejo — security risk
-        var safeUsers = users.Select(u => new
+        var safeDataUsers = users.Select(u => new
         {
             u.Id,
             u.Username,
@@ -30,14 +30,14 @@ public class UserController : ControllerBase
             u.Role
         });
 
-        return Ok(safeUsers);
+        return Ok(safeDataUsers);
     }
 
     // GET: /api/users/{id} — ek specific user dekho
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(string id)
     {
-        var user = await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null) return NotFound("User not found.");
 
         return Ok(new { user.Id, user.Username, user.Email_Address, user.Role });
@@ -47,14 +47,14 @@ public class UserController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(string id, UpdateUserDto dto)
     {
-        var user = await _users.Find(u => u.Id == id).FirstOrDefaultAsync();
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null) return NotFound("User not found.");
 
-        var update = Builders<User>.Update
-            .Set(u => u.Email_Address, dto.Email ?? user.Email_Address)
-            .Set(u => u.Role, dto.Role ?? user.Role);
+        user.Email_Address = dto.Email ?? user.Email_Address;
+        user.Role = dto.Role ?? user.Role;
 
-        await _users.UpdateOneAsync(u => u.Id == id, update);
+        _db.Users.Update(user);
+        await _db.SaveChangesAsync();
         return Ok(new { message = "User updated successfully." });
     }
 
@@ -62,9 +62,11 @@ public class UserController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)
     {
-        var result = await _users.DeleteOneAsync(u => u.Id == id);
-        if (result.DeletedCount == 0) return NotFound("User not found.");
+        var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+        if (user == null) return NotFound("User not found.");
 
+        _db.Users.Remove(user);
+        await _db.SaveChangesAsync();
         return Ok(new { message = "User deleted successfully." });
     }
 }
