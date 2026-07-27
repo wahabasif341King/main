@@ -1,0 +1,46 @@
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\appsettings.Development.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\appsettings.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.staticwebassets.endpoints.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.exe
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.deps.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.runtimeconfig.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Task Flow App.pdb
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\BCrypt-Net-Next.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\DnsClient.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\MongoDB.Bson.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\MongoDB.Driver.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\SharpCompress.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\Snappier.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\bin\Debug\net10.0\ZstdSharp.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.csproj.AssemblyReference.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\rpswa.dswa.cache.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.GeneratedMSBuildEditorConfig.editorconfig
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.AssemblyInfoInputs.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.AssemblyInfo.cs
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.csproj.CoreCompileInputs.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.MvcApplicationPartsAssemblyInfo.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\rjimswa.dswa.cache.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\scopedcss\bundle\Task Flow App.styles.css
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\staticwebassets.build.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\staticwebassets.build.json.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\staticwebassets.development.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\staticwebassets.build.endpoints.json
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\swae.build.ex.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flo.07F5BE6B.Up2Date
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\refint\Task Flow App.dll
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.pdb
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\Task Flow App.genruntimeconfig.cache
+D:\Internship from SipSap\TaskFlow App Project\Task Flow App\obj\Debug\net10.0\ref\Task Flow App.dll
