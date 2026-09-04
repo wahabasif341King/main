@@ -75,7 +75,7 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
-// Catalog / Warehouse / Inventory
+// Catalog / Warehouse / Inventory / Customers / Suppliers / Sales Orders / Purchase Orders / Invoices / Payments / Audit Logs
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<BrandService>();
@@ -84,6 +84,13 @@ builder.Services.AddScoped<ProductVariantService>();
 builder.Services.AddScoped<WarehouseService>();
 builder.Services.AddScoped<InventoryService>();
 builder.Services.AddScoped<StockTransferService>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<SupplierService>();
+builder.Services.AddScoped<SalesOrderService>();
+builder.Services.AddScoped<AuditLogService>();
+builder.Services.AddScoped<PurchaseOrderService>();
+builder.Services.AddScoped<InvoiceService>();
+builder.Services.AddScoped<PaymentService>();
 
 // 5) Controllers + Swagger
 builder.Services.AddControllers();

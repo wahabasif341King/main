@@ -30,6 +30,7 @@ import {
   ReceiptLong,
   Storefront,
   SwapHoriz,
+  PersonAdd,
 } from '@mui/icons-material';
 import useAuthStore from '../store/authStore.js';
 
@@ -37,6 +38,7 @@ const drawerWidth = 260;
 
 const menuItems = [
   { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+  { text: 'Team', icon: <PersonAdd />, path: '/team' },
   { text: 'Products', icon: <Inventory2 />, path: '/products' },
   { text: 'Categories', icon: <Category />, path: '/categories' },
   { text: 'Brands', icon: <Sell />, path: '/brands' },

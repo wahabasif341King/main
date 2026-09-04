@@ -23,7 +23,8 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
-import { Add, Edit, Delete } from '@mui/icons-material';
+import { Add, Edit, Delete, AccountTree } from '@mui/icons-material';
+import ProductVariantsDialog from '../components/ProductVariantsDialog.jsx';
 import { motion } from 'framer-motion';
 import DashboardLayout from '../layouts/DashboardLayout.jsx';
 import {
@@ -64,6 +65,7 @@ function Products() {
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [variantsProduct, setVariantsProduct] = useState(null); // jis product ke variants dekhne hain
 
   const loadAll = async () => {
     setLoading(true);
@@ -214,11 +216,14 @@ function Products() {
                         <Chip label={p.status} size="small" color={p.status === 'Active' ? 'success' : 'default'} />
                       </TableCell>
                       <TableCell align="right">
+                        <IconButton size="small" onClick={() => setVariantsProduct(p)} title="Manage Variants">
+                            <AccountTree fontSize="small" />
+                        </IconButton>
                         <IconButton size="small" onClick={() => handleOpenEdit(p)}>
-                          <Edit fontSize="small" />
+                            <Edit fontSize="small" />
                         </IconButton>
                         <IconButton size="small" color="error" onClick={() => handleDelete(p.productId)}>
-                          <Delete fontSize="small" />
+                            <Delete fontSize="small" />
                         </IconButton>
                       </TableCell>
                     </TableRow>
@@ -318,6 +323,11 @@ function Products() {
           </Button>
         </DialogActions>
       </Dialog>
+      <ProductVariantsDialog
+        open={Boolean(variantsProduct)}
+        onClose={() => setVariantsProduct(null)}
+        product={variantsProduct}
+      />
     </DashboardLayout>
   );
 }

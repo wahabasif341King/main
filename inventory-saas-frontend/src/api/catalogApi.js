@@ -29,3 +29,5 @@ export const deleteProduct = (id) => axiosInstance.delete(`/product/${id}`);
 export const getVariantsByProduct = (productId) =>
   axiosInstance.get(`/productvariant/by-product/${productId}`);
 export const createProductVariant = (data) => axiosInstance.post('/productvariant', data);
+export const updateProductVariant = (id, data) => axiosInstance.put(`/productvariant/${id}`, data);
+export const deleteProductVariant = (id) => axiosInstance.delete(`/productvariant/${id}`);

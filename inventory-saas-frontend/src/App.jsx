@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Dashboard from './pages/Dashboard.jsx';
+import Team from './pages/Team.jsx';
 import Categories from './pages/Categories.jsx';
 import Brands from './pages/Brands.jsx';
 import Taxes from './pages/Taxes.jsx';
@@ -19,6 +20,7 @@ function App() {
       <Route path="/register" element={<Register />} />
 
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+      <Route path="/team" element={<ProtectedRoute><Team /></ProtectedRoute>} />
       <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
       <Route path="/brands" element={<ProtectedRoute><Brands /></ProtectedRoute>} />
       <Route path="/taxes" element={<ProtectedRoute><Taxes /></ProtectedRoute>} />

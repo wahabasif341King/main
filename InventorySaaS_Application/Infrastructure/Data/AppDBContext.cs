@@ -29,6 +29,19 @@ namespace InventorySaaS_Application.Infrastructure.Data
         public DbSet<StockTransfer> StockTransfers => Set<StockTransfer>();
         public DbSet<StockTransferItem> StockTransferItems => Set<StockTransferItem>();
 
+        // --- Customers, Suppliers & Sales Orders ---
+        public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Supplier> Suppliers => Set<Supplier>();
+        public DbSet<SalesOrder> SalesOrders => Set<SalesOrder>();
+        public DbSet<SalesOrderItem> SalesOrderItems => Set<SalesOrderItem>();
+
+        // --- Purchase Orders, Invoices, Payments, Audit ---
+        public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
+        public DbSet<PurchaseOrderItem> PurchaseOrderItems => Set<PurchaseOrderItem>();
+        public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -153,6 +166,119 @@ namespace InventorySaaS_Application.Infrastructure.Data
                 .WithMany(t => t.Items)
                 .HasForeignKey(i => i.StockTransferId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // ===================== Customers & Suppliers =====================
+            modelBuilder.Entity<Customer>()
+                .HasIndex(c => new { c.TenantId, c.CustomerCode })
+                .IsUnique();
+
+            modelBuilder.Entity<Supplier>()
+                .HasIndex(s => new { s.TenantId, s.SupplierCode })
+                .IsUnique();
+
+            // ===================== Sales Orders =====================
+            modelBuilder.Entity<SalesOrder>()
+                .HasIndex(o => new { o.TenantId, o.OrderNumber })
+                .IsUnique();
+
+            modelBuilder.Entity<SalesOrder>()
+                .HasOne(o => o.Customer)
+                .WithMany()
+                .HasForeignKey(o => o.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SalesOrder>()
+                .HasOne(o => o.Warehouse)
+                .WithMany()
+                .HasForeignKey(o => o.WarehouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<SalesOrderItem>()
+                .HasOne(i => i.SalesOrder)
+                .WithMany(o => o.Items)
+                .HasForeignKey(i => i.SalesOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<SalesOrderItem>()
+                .HasOne(i => i.Product)
+                .WithMany()
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // ===================== Audit Logs =====================
+            modelBuilder.Entity<AuditLog>()
+                .HasOne(a => a.User)
+                .WithMany()
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ===================== Purchase Orders =====================
+            modelBuilder.Entity<PurchaseOrder>()
+                .HasIndex(o => new { o.TenantId, o.PONumber })
+                .IsUnique();
+
+            modelBuilder.Entity<PurchaseOrder>()
+                .HasOne(o => o.Supplier)
+                .WithMany()
+                .HasForeignKey(o => o.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PurchaseOrder>()
+                .HasOne(o => o.Warehouse)
+                .WithMany()
+                .HasForeignKey(o => o.WarehouseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PurchaseOrderItem>()
+                .HasOne(i => i.PurchaseOrder)
+                .WithMany(o => o.Items)
+                .HasForeignKey(i => i.PurchaseOrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PurchaseOrderItem>()
+                .HasOne(i => i.Product)
+                .WithMany()
+                .HasForeignKey(i => i.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ===================== Invoices =====================
+            modelBuilder.Entity<Invoice>()
+                .HasIndex(i => new { i.TenantId, i.InvoiceNumber })
+                .IsUnique();
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.SalesOrder)
+                .WithMany()
+                .HasForeignKey(i => i.SalesOrderId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Invoice>()
+                .HasOne(i => i.Customer)
+                .WithMany()
+                .HasForeignKey(i => i.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // ===================== Payments =====================
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Invoice)
+                .WithMany()
+                .HasForeignKey(p => p.InvoiceId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Customer)
+                .WithMany()
+                .HasForeignKey(p => p.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Payment>()
+                .HasOne(p => p.Supplier)
+                .WithMany()
+                .HasForeignKey(p => p.SupplierId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            
         }
     }
 }
